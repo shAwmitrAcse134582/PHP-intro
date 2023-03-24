@@ -1,6 +1,58 @@
 <?php
 $fonts = "arial";
 $fontscolor = "#FCBC41";
+$errname = $erremail = $errweb = $errgender = "";
+$name = $email = $website = $comment = $gender = " ";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (empty($_POST["name"])) {
+        $errname = "<span style=color:red>Name Is required</span>";
+    } else {
+        $name = validate($_POST["name"]);
+
+    }
+
+    if (empty($_POST["email"])) {
+        $erremail = "email Is required";
+    } elseif (!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
+
+        $erremail = "<span style='color:red'>Invalid email format.</span>";
+    } else {
+        $email = validate($_POST["email"]);
+    }
+
+    if (empty($_POST["website"])) {
+        $errweb = "website Is required";
+    } else {
+        $website = validate($_POST["website"]);
+    }
+
+    if (empty($_POST["gender"])) {
+        $errgender = "please select a gender";
+    } else {
+        $gender = validate($_POST["gender"]);
+    }
+
+
+
+
+    $comment = validate($_POST["comment"]);
+
+
+    // echo "Name:" . $name . "<br/>";
+    // echo "email:" . $email . "<br/>";
+    // echo "website:" . $website . "<br/>";
+    // echo "comment:" . $comment . "<br/>";
+    // echo "gender:" . $gender . "<br/>";
+
+}
+function validate($data)
+{
+    $data = trim($data);
+    $data = stripcslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+}
 ?>
 <!DOCTYPE html>
 
@@ -51,18 +103,27 @@ $fontscolor = "#FCBC41";
         <div class="main">
             <form method="POST" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
                 <table>
+                    <p style="color:red">* required field</p>
+
                     <tr>
                         <td>Name :</td>
-                        <td><input type="text" name="name" /></td>
+                        <td><input type="text" name="name" />*
+                            <?php echo $errname; ?>
+                        </td>
                     </tr>
+
                     <tr>
                         <td>Email :</td>
-                        <td><input type="email" name="email" /></td>
+                        <td><input type="email" name="email" />*
+                            <?php echo $erremail; ?>
+                        </td>
                     </tr>
 
                     <tr>
                         <td>website :</td>
                         <td><input type="text" name="website" />
+                            *
+                            <?php echo $errweb; ?>
                         </td>
                     </tr>
 
@@ -77,6 +138,8 @@ $fontscolor = "#FCBC41";
                         <td>
                             <input type="radio" name="gender" value="female">Female</input>
                             <input type="radio" name="gender" value="female">Male</input>
+                            *
+                            <?php echo $errgender; ?>
                         </td>
 
                     </tr>
@@ -88,30 +151,7 @@ $fontscolor = "#FCBC41";
                 </table>
             </form>
 
-            <?php
-            if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                $name = validate($_POST["name"]);
-                $email = validate($_POST["email"]);
-                $website = validate($_POST["website"]);
-                $comment = validate($_POST["comment"]);
-                $gender = validate($_POST["gender"]);
 
-                echo "Name:" . $name . "<br/>";
-                echo "email:" . $email . "<br/>";
-                echo "website:" . $website . "<br/>";
-                echo "comment:" . $comment . "<br/>";
-                echo "gender:" . $gender . "<br/>";
-
-            }
-            function validate($data)
-            {
-                $data = trim($data);
-                $data = stripcslashes($data);
-                $data = htmlspecialchars($data);
-                return $data;
-            }
-
-            ?>
         </div>
 
         <div class="footer">
